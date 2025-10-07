@@ -140,16 +140,18 @@ function calculatePersonalityScores(answers) {
     scores[companion] = 0;
   });
 
-  // Score each answer
+  // Score each answer (only for the first 5 questions)
   answers.forEach((answer, questionIndex) => {
-    const questionKey = `question${questionIndex + 1}`;
-    const scoring = getScoringForAnswer(questionKey, answer);
-    
-    Object.entries(scoring).forEach(([companion, points]) => {
-      if (scores[companion] !== undefined) {
-        scores[companion] += points;
-      }
-    });
+    if (questionIndex < 5) { // Only process first 5 questions
+      const questionKey = `question${questionIndex + 1}`;
+      const scoring = getScoringForAnswer(questionKey, answer);
+      
+      Object.entries(scoring).forEach(([companion, points]) => {
+        if (scores[companion] !== undefined) {
+          scores[companion] += points;
+        }
+      });
+    }
   });
 
   // Sort by score and get top 3 + wildcard
@@ -267,17 +269,21 @@ function calculateToolRecommendations(stage2Answers) {
     });
   });
 
-  // Score based on stage 2 answers
-  stage2Answers.forEach((answer, questionIndex) => {
-    const questionKey = `question${questionIndex + 1}`;
-    const toolMapping = getToolMappingForAnswer(questionKey, answer);
-    
-    Object.entries(toolMapping).forEach(([toolName, points]) => {
-      if (toolScores[toolName]) {
-        toolScores[toolName].score += points;
+  // Score based on stage 2 answers (only for the first 5 questions)
+  if (stage2Answers) {
+    stage2Answers.forEach((answer, questionIndex) => {
+      if (questionIndex < 5) { // Only process first 5 questions
+        const questionKey = `question${questionIndex + 1}`;
+        const toolMapping = getToolMappingForAnswer(questionKey, answer);
+        
+        Object.entries(toolMapping).forEach(([toolName, points]) => {
+          if (toolScores[toolName]) {
+            toolScores[toolName].score += points;
+          }
+        });
       }
     });
-  });
+  }
 
   // Sort by score and get top 3 + wildcard
   const sorted = Object.values(toolScores)
