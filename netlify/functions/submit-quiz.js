@@ -1,4 +1,5 @@
 const { Pool } = require('pg');
+const { Resend } = require('resend');
 
 // Initialize PostgreSQL connection
 const pool = new Pool({
@@ -455,27 +456,16 @@ exports.handler = async (event, context) => {
         console.log('Attempting to send email to:', email);
         const emailContent = generateEmailContent(name, personalityResults, toolResults, demographics);
         
-        const emailResponse = await fetch('https://api.resend.com/emails', {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${process.env.RESEND_API_KEY}`,
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            from: 'Neuron Academy <onboarding@resend.dev>',
-            to: [email],
-            subject: 'Your AI Personality Matching Results',
-            text: emailContent
-          })
+        const resend = new Resend(process.env.RESEND_API_KEY);
+        
+        const emailResult = await resend.emails.send({
+          from: 'Neuron Academy <onboarding@resend.dev>',
+          to: [email],
+          subject: 'Your AI Personality Matching Results',
+          text: emailContent
         });
         
-        if (emailResponse.ok) {
-          const emailResult = await emailResponse.json();
-          console.log('Email sent successfully:', emailResult);
-        } else {
-          const errorText = await emailResponse.text();
-          console.error('Email sending failed:', emailResponse.status, errorText);
-        }
+        console.log('Email sent successfully:', emailResult);
       } catch (emailError) {
         console.error('Email sending failed:', emailError);
         // Don't fail the request if email fails

@@ -9,12 +9,20 @@
     "start": "netlify dev"
   },
   "dependencies": {
-    "pg": "^8.11.3"
+    "pg": "^8.11.3",
+    "resend": "^6.1.2"
   },
   "devDependencies": {
     "netlify-cli": "^17.10.1"
   },
-  "keywords": ["quiz", "ai", "personality", "survey", "netlify", "serverless"],
+  "keywords": [
+    "quiz",
+    "ai",
+    "personality",
+    "survey",
+    "netlify",
+    "serverless"
+  ],
   "author": "Neuron Academy",
   "license": "MIT",
   "engines": {
