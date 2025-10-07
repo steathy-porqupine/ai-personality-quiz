@@ -78,10 +78,13 @@ class QuizApp {
   }
 
   loadQuestion() {
+    console.log('Loading question - Stage:', this.currentStage, 'Question:', this.currentQuestion);
     const questions = this.currentStage === 1 ? this.quizData.stage1Questions : this.quizData.stage2Questions;
+    console.log('Questions available:', questions ? questions.length : 'null');
     const question = questions[this.currentQuestion];
     
     if (!question) {
+      console.log('No question found, ending stage');
       this.endStage();
       return;
     }
@@ -203,7 +206,8 @@ const stopBtn = document.getElementById('stop-submit');
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          name: this.name,
+          name: this.name || 'Anonymous',
+          email: this.email || 'temp@example.com',
           stage1Answers: this.answers.stage1,
           stage2Answers: null,
           validationFeedback: this.validationFeedback,
@@ -212,10 +216,16 @@ const stopBtn = document.getElementById('stop-submit');
       });
       
       const data = await response.json();
-      this.personalityResults = data.personalityResults;
+      console.log('Calculation response:', data);
       
-      this.showPersonalityResults();
-      this.showSection('confirm');
+      if (data.success && data.personalityResults) {
+        this.personalityResults = data.personalityResults;
+        this.showPersonalityResults();
+        this.showSection('confirm');
+      } else {
+        console.error('Invalid response:', data);
+        this.showError('Failed to calculate results. Please try again.');
+      }
     } catch (error) {
       console.error('Failed to calculate results:', error);
       this.showError('Failed to calculate results. Please try again.');
@@ -302,6 +312,7 @@ const stopBtn = document.getElementById('stop-submit');
   }
 
   moveToStage2() {
+    console.log('Moving to stage 2...');
     this.currentStage = 2;
     this.currentQuestion = 0;
     this.showSection('quiz');
