@@ -19,7 +19,7 @@
 
       <div class="form-section">
         <label for="age">Age (optional)</label>
-        <select id="age" autocomplete="bday">
+        <select id="age" autocomplete="off">
           <option value="">Select age range</option>
           <option value="18-24">18-24</option>
           <option value="25-34">25-34</option>
@@ -46,8 +46,8 @@
         </select>
       </div>
 
-      <label for="intro-note">A few quick notes</label>
-      <p id="intro-note" class="muted">You may stop and submit after Stage 1 or complete Stage 2. Your progress is saved locally so you can resume later.</p>
+      <h3>A few quick notes</h3>
+      <p class="muted">You may stop and submit after Stage 1 or complete Stage 2. Your progress is saved locally so you can resume later.</p>
 
       <div class="actions">
         <button id="start-btn" class="primary">Start Quiz</button>
@@ -92,7 +92,7 @@
       <label for="email">Email (to receive results)</label>
       <input id="email" type="email" placeholder="you@example.com" autocomplete="email">
       <label for="comments">Any final comments</label>
-      <textarea id="comments" rows="3" placeholder="Optional message"></textarea>
+      <textarea id="comments" rows="3" placeholder="Optional message" autocomplete="off"></textarea>
       <div class="nav">
         <button id="send-btn" class="primary">Send & Finish</button>
       </div>
