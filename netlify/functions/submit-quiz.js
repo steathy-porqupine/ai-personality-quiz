@@ -471,12 +471,12 @@ exports.handler = async (event, context) => {
         
         const resend = new Resend(process.env.RESEND_API_KEY);
         
-        const emailResult = await resend.emails.send({
-          from: 'Neuron Academy <onboarding@resend.dev>',
-          to: [email],
-          subject: 'Your AI Personality Matching Results',
-          text: emailContent
-        });
+            const emailResult = await resend.emails.send({
+              from: 'Neuron Academy <onboarding@resend.dev>',
+              to: [email],
+              subject: 'Your AI Personality Matching Results',
+              text: emailContent
+            });
         
         console.log('Email sent successfully:', emailResult);
       } catch (emailError) {
