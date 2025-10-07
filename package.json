@@ -9,6 +9,7 @@
     "start": "netlify dev"
   },
   "dependencies": {
+    "@sendgrid/mail": "^8.1.6",
     "pg": "^8.11.3",
     "resend": "^6.1.2"
   },

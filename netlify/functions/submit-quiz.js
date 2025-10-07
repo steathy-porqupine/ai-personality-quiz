@@ -1,5 +1,6 @@
 const { Pool } = require('pg');
 const { Resend } = require('resend');
+const sgMail = require('@sendgrid/mail');
 
 // Initialize PostgreSQL connection
 const pool = new Pool({
@@ -464,27 +465,49 @@ exports.handler = async (event, context) => {
     }
     
     // Send email if provided and email service is configured
-    if (email && process.env.RESEND_API_KEY) {
+    if (email) {
       try {
         console.log('Attempting to send email to:', email);
         const emailContent = generateEmailContent(name, personalityResults, toolResults, demographics);
         
-        const resend = new Resend(process.env.RESEND_API_KEY);
-        
-            const emailResult = await resend.emails.send({
-              from: 'Neuron Academy <onboarding@resend.dev>',
-              to: [email],
-              subject: 'Your AI Personality Matching Results',
-              text: emailContent
-            });
-        
-        console.log('Email sent successfully:', emailResult);
+        // Try SendGrid first (allows sending to any email)
+        if (process.env.SENDGRID_API_KEY) {
+          console.log('Using SendGrid for email delivery');
+          sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+          
+          const msg = {
+            to: email,
+            from: 'neuron.academy25@gmail.com', // Verified sender
+            subject: 'Your AI Personality Matching Results',
+            text: emailContent,
+            html: emailContent.replace(/\n/g, '<br>')
+          };
+          
+          const emailResult = await sgMail.send(msg);
+          console.log('SendGrid email sent successfully:', emailResult[0].statusCode);
+        }
+        // Fallback to Resend (limited to verified emails)
+        else if (process.env.RESEND_API_KEY) {
+          console.log('Using Resend for email delivery');
+          const resend = new Resend(process.env.RESEND_API_KEY);
+          
+          const emailResult = await resend.emails.send({
+            from: 'Neuron Academy <onboarding@resend.dev>',
+            to: [email],
+            subject: 'Your AI Personality Matching Results',
+            text: emailContent
+          });
+          
+          console.log('Resend email sent successfully:', emailResult);
+        } else {
+          console.log('No email service configured');
+        }
       } catch (emailError) {
         console.error('Email sending failed:', emailError);
         // Don't fail the request if email fails
       }
     } else {
-      console.log('Email not sent - missing email or API key:', { email: !!email, apiKey: !!process.env.RESEND_API_KEY });
+      console.log('No email provided');
     }
     
     return {
