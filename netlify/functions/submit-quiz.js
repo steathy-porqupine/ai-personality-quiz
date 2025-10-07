@@ -452,6 +452,7 @@ exports.handler = async (event, context) => {
     // Send email if provided and email service is configured
     if (email && process.env.RESEND_API_KEY) {
       try {
+        console.log('Attempting to send email to:', email);
         const emailContent = generateEmailContent(name, personalityResults, toolResults, demographics);
         
         const emailResponse = await fetch('https://api.resend.com/emails', {
@@ -468,13 +469,19 @@ exports.handler = async (event, context) => {
           })
         });
         
-        if (!emailResponse.ok) {
-          console.error('Email sending failed:', await emailResponse.text());
+        if (emailResponse.ok) {
+          const emailResult = await emailResponse.json();
+          console.log('Email sent successfully:', emailResult);
+        } else {
+          const errorText = await emailResponse.text();
+          console.error('Email sending failed:', emailResponse.status, errorText);
         }
       } catch (emailError) {
         console.error('Email sending failed:', emailError);
         // Don't fail the request if email fails
       }
+    } else {
+      console.log('Email not sent - missing email or API key:', { email: !!email, apiKey: !!process.env.RESEND_API_KEY });
     }
     
     return {

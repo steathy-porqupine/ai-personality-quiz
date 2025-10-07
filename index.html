@@ -19,7 +19,7 @@
 
       <div class="form-section">
         <label for="age">Age (optional)</label>
-        <select id="age">
+        <select id="age" autocomplete="bday">
           <option value="">Select age range</option>
           <option value="18-24">18-24</option>
           <option value="25-34">25-34</option>
@@ -32,12 +32,12 @@
 
       <div class="form-section">
         <label for="location">Location (optional)</label>
-        <input id="location" type="text" placeholder="City, Country" autocomplete="country">
+        <input id="location" type="text" placeholder="City, Country" autocomplete="country-name">
       </div>
 
       <div class="form-section">
         <label for="experience">AI Experience (optional)</label>
-        <select id="experience">
+        <select id="experience" autocomplete="off">
           <option value="">Select your experience level</option>
           <option value="beginner">Beginner - Just starting with AI</option>
           <option value="intermediate">Intermediate - Used a few AI tools</option>
@@ -90,7 +90,7 @@
     <section id="submit-form" class="card hidden">
       <h2>Submit your results</h2>
       <label for="email">Email (to receive results)</label>
-      <input id="email" type="email" placeholder="you@example.com">
+      <input id="email" type="email" placeholder="you@example.com" autocomplete="email">
       <label for="comments">Any final comments</label>
       <textarea id="comments" rows="3" placeholder="Optional message"></textarea>
       <div class="nav">
