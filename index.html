@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>AI Personality Matching Survey</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="container">
+    <section id="intro" class="card">
+      <h1 id="quiz-title">AI Personality Quiz — sponsored by Neuron Academy</h1>
+      <p id="quiz-desc">Welcome! This quick, fun quiz helps match you to an AI Companion style and suggests tools for your goals. Enter your full name to start — results can be emailed to you after each section.</p>
+
+      <div class="form-section">
+        <label for="name">Full name <span class="required">*</span></label>
+        <input id="name" type="text" placeholder="Enter your full name" autocomplete="name" required>
+      </div>
+
+      <div class="form-section">
+        <label for="age">Age (optional)</label>
+        <select id="age">
+          <option value="">Select age range</option>
+          <option value="18-24">18-24</option>
+          <option value="25-34">25-34</option>
+          <option value="35-44">35-44</option>
+          <option value="45-54">45-54</option>
+          <option value="55-64">55-64</option>
+          <option value="65+">65+</option>
+        </select>
+      </div>
+
+      <div class="form-section">
+        <label for="location">Location (optional)</label>
+        <input id="location" type="text" placeholder="City, Country" autocomplete="country">
+      </div>
+
+      <div class="form-section">
+        <label for="experience">AI Experience (optional)</label>
+        <select id="experience">
+          <option value="">Select your experience level</option>
+          <option value="beginner">Beginner - Just starting with AI</option>
+          <option value="intermediate">Intermediate - Used a few AI tools</option>
+          <option value="advanced">Advanced - Regularly use AI tools</option>
+          <option value="expert">Expert - Build with AI/ML</option>
+        </select>
+      </div>
+
+      <label for="intro-note">A few quick notes</label>
+      <p id="intro-note" class="muted">You may stop and submit after Stage 1 or complete Stage 2. Your progress is saved locally so you can resume later.</p>
+
+      <div class="actions">
+        <button id="start-btn" class="primary">Start Quiz</button>
+      </div>
+    </section>
+
+    <section id="quiz" class="card hidden">
+      <div id="progress">Stage <span id="stage-num">1</span> — Question <span id="q-num">1</span></div>
+      <h2 id="question-title">Question</h2>
+      <div id="options" class="options"></div>
+
+      <div class="nav">
+        <button id="stop-submit" class="secondary">Stop & Submit</button>
+        <button id="next-btn" class="primary">Next</button>
+      </div>
+    </section>
+
+    <section id="confirm" class="card hidden">
+      <h2 id="result-title">Does this personality feel right for you?</h2>
+      <div class="confirm-actions">
+        <button id="felt-yes" class="primary">Yes — Looks good</button>
+        <button id="felt-kindof" class="secondary">Kind of — Tell me more</button>
+        <button id="felt-no" class="tertiary">No — Restart / Feedback</button>
+      </div>
+    </section>
+
+    <section id="more-questions" class="card hidden">
+      <h2>Quick follow-up</h2>
+      <p>Let's ask a few more questions to better match your personality:</p>
+      
+      <div id="additional-questions-container">
+        <!-- Additional questions will be loaded here -->
+      </div>
+      
+      <div class="nav">
+        <button id="submit-final" class="primary">Submit & Email Results</button>
+      </div>
+    </section>
+
+    <section id="submit-form" class="card hidden">
+      <h2>Submit your results</h2>
+      <label for="email">Email (to receive results)</label>
+      <input id="email" type="email" placeholder="you@example.com">
+      <label for="comments">Any final comments</label>
+      <textarea id="comments" rows="3" placeholder="Optional message"></textarea>
+      <div class="nav">
+        <button id="send-btn" class="primary">Send & Finish</button>
+      </div>
+      <div id="submit-status" class="status"></div>
+    </section>
+
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>

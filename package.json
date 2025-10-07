@@ -1,0 +1,23 @@
+{
+  "name": "ai-personality-quiz",
+  "version": "1.0.0",
+  "description": "Interactive AI Personality Matching Survey - Netlify Ready",
+  "main": "index.html",
+  "scripts": {
+    "build": "echo 'No build step required for static site'",
+    "dev": "netlify dev",
+    "start": "netlify dev"
+  },
+  "dependencies": {
+    "pg": "^8.11.3"
+  },
+  "devDependencies": {
+    "netlify-cli": "^17.10.1"
+  },
+  "keywords": ["quiz", "ai", "personality", "survey", "netlify", "serverless"],
+  "author": "Neuron Academy",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Your AI Match Results</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="container">
+    <section class="card">
+      <h1>Your AI Companion Matches</h1>
+      <div id="matches"></div>
+      <h2>Recommended Tools</h2>
+      <div id="tools"></div>
+      <div class="nav">
+        <a id="download-pdf" class="primary" href="#">Download PDF</a>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // Load stored state and compute simple Top 3
+    const s = localStorage.getItem('ai_quiz_state_v1');
+    if(!s){ document.getElementById('matches').textContent = 'No results found. Please take the quiz first.'; }
+    else{
+      const state = JSON.parse(s);
+      const scores = state.scores || {};
+      const pairs = Object.entries(scores).sort((a,b)=>b[1]-a[1]);
+      const top3 = pairs.slice(0,3);
+      const wildcard = pairs[3] || null;
+      const matchesEl = document.getElementById('matches');
+      top3.forEach(([name,score],i)=>{
+        const div = document.createElement('div'); div.innerHTML = `<strong>${i+1}. ${name}</strong> — ${score} pts`;
+        matchesEl.appendChild(div);
+      });
+      if(wildcard){ const d=document.createElement('div'); d.innerHTML = `<em>Wildcard: ${wildcard[0]} — ${wildcard[1]} pts</em>`; matchesEl.appendChild(d); }
+      document.getElementById('download-pdf').href = '/pdf?name='+encodeURIComponent(state.name||'') ;
+    }
+  </script>
+</body>
+</html>
