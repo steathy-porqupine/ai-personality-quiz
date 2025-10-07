@@ -430,24 +430,37 @@ exports.handler = async (event, context) => {
     const toolResults = stage2Answers ? calculateToolRecommendations(stage2Answers) : null;
     
     // Store in database
-    const client = await pool.connect();
+    let dbSuccess = false;
     try {
-      await client.query(`
-        INSERT INTO quiz_results 
-        (name, email, stage1_answers, stage2_answers, personality_scores, tool_scores, validation_feedback, demographics, submitted_at)
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, NOW())
-      `, [
-        name,
-        email,
-        JSON.stringify(stage1Answers),
-        JSON.stringify(stage2Answers),
-        JSON.stringify(personalityResults),
-        JSON.stringify(toolResults),
-        JSON.stringify(validationFeedback),
-        JSON.stringify(demographics)
-      ]);
-    } finally {
-      client.release();
+      const client = await pool.connect();
+      try {
+        await client.query(`
+          INSERT INTO quiz_results 
+          (name, email, stage1_answers, stage2_answers, personality_scores, tool_scores, validation_feedback, demographics, submitted_at)
+          VALUES ($1, $2, $3, $4, $5, $6, $7, $8, NOW())
+        `, [
+          name,
+          email,
+          JSON.stringify(stage1Answers),
+          JSON.stringify(stage2Answers),
+          JSON.stringify(personalityResults),
+          JSON.stringify(toolResults),
+          JSON.stringify(validationFeedback),
+          JSON.stringify(demographics)
+        ]);
+        console.log('Database record created successfully');
+        dbSuccess = true;
+      } finally {
+        client.release();
+      }
+    } catch (dbError) {
+      console.error('Database error:', dbError);
+      console.error('Database error details:', {
+        message: dbError.message,
+        code: dbError.code,
+        detail: dbError.detail
+      });
+      // Continue with email even if database fails
     }
     
     // Send email if provided and email service is configured
@@ -484,19 +497,36 @@ exports.handler = async (event, context) => {
         success: true,
         personalityResults,
         toolResults,
-        message: 'Quiz submitted successfully!'
+        message: 'Quiz submitted successfully!',
+        databaseSaved: dbSuccess
       })
     };
     
   } catch (error) {
     console.error('Error submitting quiz:', error);
+    console.error('Error details:', {
+      message: error.message,
+      code: error.code,
+      detail: error.detail,
+      hint: error.hint,
+      stack: error.stack
+    });
+    
     return {
       statusCode: 500,
       headers: {
         'Access-Control-Allow-Origin': '*',
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ success: false, error: 'Failed to submit quiz' })
+      body: JSON.stringify({ 
+        success: false, 
+        error: 'Failed to submit quiz',
+        details: {
+          message: error.message,
+          code: error.code,
+          type: error.constructor.name
+        }
+      })
     };
   }
 };
