@@ -2,8 +2,8 @@ const { Pool } = require('pg');
 
 // Initialize PostgreSQL connection
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
+  connectionString: process.env.DATABASE_URL || 'postgresql://neondb_owner:npg_dugwQXf7Z4BS@ep-flat-band-adnpoucu-pooler.c-2.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require',
+  ssl: { rejectUnauthorized: false }
 });
 
 // AI Companion definitions
@@ -429,24 +429,30 @@ exports.handler = async (event, context) => {
     const toolResults = stage2Answers ? calculateToolRecommendations(stage2Answers) : null;
     
     // Store in database
-    const client = await pool.connect();
     try {
-      await client.query(`
-        INSERT INTO quiz_results 
-        (name, email, stage1_answers, stage2_answers, personality_scores, tool_scores, validation_feedback, demographics, submitted_at)
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, NOW())
-      `, [
-        name,
-        email,
-        JSON.stringify(stage1Answers),
-        JSON.stringify(stage2Answers),
-        JSON.stringify(personalityResults),
-        JSON.stringify(toolResults),
-        JSON.stringify(validationFeedback),
-        JSON.stringify(demographics)
-      ]);
-    } finally {
-      client.release();
+      const client = await pool.connect();
+      try {
+        await client.query(`
+          INSERT INTO quiz_results 
+          (name, email, stage1_answers, stage2_answers, personality_scores, tool_scores, validation_feedback, demographics, submitted_at)
+          VALUES ($1, $2, $3, $4, $5, $6, $7, $8, NOW())
+        `, [
+          name,
+          email,
+          JSON.stringify(stage1Answers),
+          JSON.stringify(stage2Answers),
+          JSON.stringify(personalityResults),
+          JSON.stringify(toolResults),
+          JSON.stringify(validationFeedback),
+          JSON.stringify(demographics)
+        ]);
+        console.log('Database record created successfully');
+      } finally {
+        client.release();
+      }
+    } catch (dbError) {
+      console.error('Database error:', dbError);
+      // Continue with email even if database fails
     }
     
     // Send email if provided and email service is configured
@@ -462,7 +468,7 @@ exports.handler = async (event, context) => {
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
-            from: 'Neuron Academy <neuron.academy25@gmail.com>',
+            from: 'Neuron Academy <onboarding@resend.dev>',
             to: [email],
             subject: 'Your AI Personality Matching Results',
             text: emailContent
