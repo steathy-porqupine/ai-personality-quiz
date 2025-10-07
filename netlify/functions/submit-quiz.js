@@ -461,7 +461,7 @@ exports.handler = async (event, context) => {
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
-            from: 'AI Quiz <noreply@your-domain.com>',
+            from: 'Neuron Academy <neuron.academy25@gmail.com>',
             to: [email],
             subject: 'Your AI Personality Matching Results',
             text: emailContent
