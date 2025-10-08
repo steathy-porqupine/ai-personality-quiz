@@ -45,3 +45,4 @@ GROUP BY personality_scores->'top3'->0->>'name'
 ORDER BY frequency DESC;
 
 
+

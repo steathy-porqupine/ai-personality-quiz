@@ -444,6 +444,7 @@ const stopBtn = document.getElementById('stop-submit');
     submitForm.innerHTML = `
       <h2>Submit your results</h2>
       <p>Get your complete AI personality and tool recommendations emailed to you!</p>
+      <p class="muted">📧 <em>Tip: Check your spam/junk folder if you don't receive the email within a few minutes.</em></p>
       
       <label for="email">Email Address <span class="required">*</span></label>
       <input id="email" type="email" placeholder="you@example.com" required>
@@ -508,6 +509,7 @@ const stopBtn = document.getElementById('stop-submit');
           <div class="success">
             <h3>✅ Results sent successfully!</h3>
             <p>Check your email for your personalized AI companion and tool recommendations.</p>
+            <p><strong>📧 Pro tip:</strong> If you don't see the email in your inbox, please check your spam/junk folder.</p>
             <p>Thank you for taking the quiz!</p>
           </div>
         `;

@@ -76,3 +76,4 @@ if (require.main === module) {
   
   console.log('\n✅ Environment variables loaded successfully!');
 }
+

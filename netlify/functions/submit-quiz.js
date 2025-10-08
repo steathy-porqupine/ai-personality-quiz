@@ -501,6 +501,7 @@ exports.handler = async (event, context) => {
           console.log('Resend email sent successfully:', emailResult);
         } else {
           console.log('No email service configured');
+          
         }
       } catch (emailError) {
         console.error('Email sending failed:', emailError);
