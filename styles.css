@@ -269,6 +269,22 @@ button:disabled {
   margin-top: 2rem;
 }
 
+/* End quiz button styling */
+#end-quiz-btn {
+  border: 2px solid #48bb78;
+  width: 100%;
+  max-width: 400px;
+}
+
+#end-quiz-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(72, 187, 120, 0.3);
+}
+
+#end-quiz-separator {
+  width: 100%;
+}
+
 /* Results preview */
 .results-preview {
   background: #f7fafc;
@@ -476,15 +492,19 @@ button:disabled {
   }
   
   .option-content {
-    flex-direction: column;
-    text-align: center;
-    gap: 0.5rem;
+    flex-direction: row;
+    text-align: left;
+    gap: 1rem;
   }
   
   .option-letter {
-    width: 32px;
-    height: 32px;
+    width: 36px;
+    height: 36px;
     font-size: 0.9rem;
+  }
+  
+  .option-text {
+    font-size: 1rem;
   }
   
   .nav {
@@ -500,6 +520,11 @@ button:disabled {
     gap: 0.75rem;
   }
   
+  .confirm-actions button {
+    padding: 1rem;
+    font-size: 0.95rem;
+  }
+  
   .match-percentage {
     font-size: 1.5rem;
   }
@@ -511,23 +536,49 @@ button:disabled {
     top: auto;
     margin-bottom: 1rem;
   }
+  
+  /* Better list display on mobile */
+  ul {
+    font-size: 0.95rem;
+  }
+  
+  /* Ensure additional questions look good on mobile */
+  .additional-question h2 {
+    font-size: 1.25rem;
+  }
 }
 
 @media (max-width: 480px) {
+  body {
+    padding: 8px;
+  }
+  
   .card {
     padding: 1rem;
   }
   
   h1 {
-    font-size: 1.75rem;
+    font-size: 1.5rem;
+    line-height: 1.3;
   }
   
   h2 {
     font-size: 1.25rem;
+    line-height: 1.3;
   }
   
   .option {
     padding: 1rem;
+  }
+  
+  .option-letter {
+    width: 32px;
+    height: 32px;
+    font-size: 0.85rem;
+  }
+  
+  .option-text {
+    font-size: 0.95rem;
   }
   
   button {
@@ -537,8 +588,28 @@ button:disabled {
   
   input[type="text"],
   input[type="email"],
-  textarea {
+  textarea,
+  select {
     padding: 0.875rem;
+    font-size: 1rem;
+  }
+  
+  .match-percentage {
+    font-size: 1.25rem;
+  }
+  
+  .results-preview {
+    padding: 1rem;
+  }
+  
+  /* Make Stage 2 explanation more compact on small screens */
+  ul {
+    font-size: 0.9rem;
+    margin-left: 1.25rem;
+  }
+  
+  .additional-question h2 {
+    font-size: 1.1rem;
   }
 }
 

@@ -260,7 +260,7 @@ const stopBtn = document.getElementById('stop-submit');
   showPersonalityResults() {
     const title = document.getElementById('result-title');
     title.innerHTML = `
-      <h2>Your AI Companion Matches</h2>
+      <h2>🎯 Stage 1 Complete: Your Top AI Companion</h2>
       <div class="results-preview">
         <div class="top-match">
           <h3>${this.personalityResults.top3[0].name}</h3>
@@ -268,8 +268,48 @@ const stopBtn = document.getElementById('stop-submit');
           <p class="match-description">${this.personalityResults.top3[0].description}</p>
         </div>
       </div>
-      <p class="validation-question">Does this personality feel right for you?</p>
+      
+      <div style="background: #f7fafc; border-radius: 12px; padding: 1.5rem; margin: 1.5rem 0;">
+        <h3 style="color: #667eea; margin-bottom: 0.75rem;">🛠️ Want Tool Recommendations Too?</h3>
+        <p style="color: #4a5568; margin-bottom: 0.5rem;">Stage 2 helps us match you with specific AI tools for:</p>
+        <ul style="color: #718096; margin-left: 1.5rem; margin-bottom: 0;">
+          <li>Video creation & editing</li>
+          <li>Image design & graphics</li>
+          <li>Audio & voice generation</li>
+          <li>Research & writing</li>
+          <li>Coding & development</li>
+        </ul>
+      </div>
+      
+      <p class="validation-question">Does this match feel right?</p>
     `;
+    
+    // Update button text for clarity
+    document.getElementById('felt-yes').innerHTML = '✅ Yes — Continue to Stage 2';
+    document.getElementById('felt-kindof').innerHTML = '🤔 Kind of — Refine Match';
+    document.getElementById('felt-no').innerHTML = '❌ No — Restart Quiz';
+    
+    // Add separator and "End Quiz" button
+    const confirmSection = document.getElementById('confirm');
+    const confirmActions = confirmSection.querySelector('.confirm-actions');
+    
+    // Check if end-quiz button already exists
+    if (!document.getElementById('end-quiz-separator')) {
+      const separator = document.createElement('div');
+      separator.id = 'end-quiz-separator';
+      separator.style.cssText = 'border-top: 2px solid #e2e8f0; margin: 1.5rem 0; padding-top: 1rem; text-align: center;';
+      separator.innerHTML = '<p style="color: #718096; font-size: 0.9rem; margin-bottom: 0.75rem;">Or skip Stage 2:</p>';
+      
+      const endQuizBtn = document.createElement('button');
+      endQuizBtn.id = 'end-quiz-btn';
+      endQuizBtn.className = 'primary';
+      endQuizBtn.style.background = 'linear-gradient(135deg, #48bb78 0%, #38a169 100%)';
+      endQuizBtn.innerHTML = '✉️ End Quiz & Email Results';
+      endQuizBtn.addEventListener('click', () => this.endQuizAndEmail());
+      
+      separator.appendChild(endQuizBtn);
+      confirmActions.appendChild(separator);
+    }
   }
 
   showToolResults() {
@@ -296,6 +336,7 @@ const stopBtn = document.getElementById('stop-submit');
       } else if (response === 'kindof') {
         this.showMoreQuestions();
       } else {
+        // "No" means restart/feedback
         this.showRestartOptions();
       }
     } else {
@@ -309,6 +350,12 @@ const stopBtn = document.getElementById('stop-submit');
         this.showRestartOptions();
       }
     }
+  }
+
+  endQuizAndEmail() {
+    // User wants to end after Stage 1 and get results emailed
+    this.validationFeedback.stage1 = 'completed';
+    this.showSubmitForm();
   }
 
   moveToStage2() {
@@ -338,8 +385,11 @@ const stopBtn = document.getElementById('stop-submit');
       const questionDiv = document.createElement('div');
       questionDiv.className = 'additional-question';
       questionDiv.innerHTML = `
-        <h3>${question.question}</h3>
-        <div class="options">
+        <div style="background: #edf2f7; padding: 0.75rem 1rem; border-radius: 8px; text-align: center; font-weight: 600; color: #4a5568; margin-bottom: 1.5rem;">
+          Refinement Question ${i + 1} of ${questionsToShow}
+        </div>
+        <h2 style="font-size: 1.5rem; margin-bottom: 2rem; text-align: left; color: #2d3748;">${question.question}</h2>
+        <div class="options" style="margin-bottom: 2rem;">
           ${question.options.map(option => `
             <div class="option" data-question="${questionIndex}" data-value="${option.value}">
               <div class="option-content">
