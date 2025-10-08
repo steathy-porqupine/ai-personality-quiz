@@ -315,7 +315,7 @@ const stopBtn = document.getElementById('stop-submit');
   showToolResults() {
     const title = document.getElementById('result-title');
     title.innerHTML = `
-      <h2>Your Personalized AI Tool Stack</h2>
+      <h2>🎯 Stage 2 Complete: Your AI Tool Stack</h2>
       <div class="results-preview">
         <div class="top-match">
           <h3>${this.toolResults.top3[0].name}</h3>
@@ -325,6 +325,17 @@ const stopBtn = document.getElementById('stop-submit');
       </div>
       <p class="validation-question">Do these tool recommendations feel right for you?</p>
     `;
+    
+    // Update button text for Stage 2 completion
+    document.getElementById('felt-yes').innerHTML = '✅ Yes — Get My Results';
+    document.getElementById('felt-kindof').innerHTML = '🤔 Kind of — Refine Tools';
+    document.getElementById('felt-no').innerHTML = '❌ No — Restart Quiz';
+    
+    // Remove the "End Quiz" button if it exists (not needed for Stage 2)
+    const endQuizSeparator = document.getElementById('end-quiz-separator');
+    if (endQuizSeparator) {
+      endQuizSeparator.remove();
+    }
   }
 
   handleValidation(response) {
