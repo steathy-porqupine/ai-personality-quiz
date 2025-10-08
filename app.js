@@ -503,26 +503,56 @@ const stopBtn = document.getElementById('stop-submit');
   showSubmitForm() {
     const submitForm = document.getElementById('submit-form');
     submitForm.innerHTML = `
-      <h2>Submit your results</h2>
-      <p>Get your complete AI personality and tool recommendations emailed to you!</p>
-      <p class="muted">📧 <em>Tip: Check your spam/junk folder if you don't receive the email within a few minutes.</em></p>
+      <h2>View Your Results</h2>
+      <p>Get your complete AI personality and tool recommendations!</p>
       
-      <label for="email">Email Address <span class="required">*</span></label>
-      <input id="email" type="email" placeholder="you@example.com" required>
+      <div style="background: #f7fafc; border-radius: 12px; padding: 1.5rem; margin: 1.5rem 0;">
+        <h3 style="color: #667eea; margin-bottom: 0.75rem;">📧 Want results emailed to you? (Optional)</h3>
+        <label for="email">Email Address</label>
+        <input id="email" type="email" placeholder="you@example.com (optional)">
+        <p class="muted" style="margin-top: 0.5rem;">📧 <em>Tip: Check your spam/junk folder if you don't receive the email within a few minutes.</em></p>
+      </div>
       
       <label for="comments">Any final comments (optional)</label>
       <textarea id="comments" rows="3" placeholder="Share your thoughts about the quiz..."></textarea>
       
-      <div class="nav">
-        <button id="send-btn" class="primary">Send Results & Finish</button>
+      <div class="nav" style="flex-direction: column; gap: 0.75rem;">
+        <button id="show-results-btn" class="primary" style="max-width: none;">📊 Show My Results</button>
+        <button id="send-btn" class="secondary" style="max-width: none;">✉️ Email Results & Finish</button>
       </div>
       <div id="submit-status" class="status"></div>
     `;
     
-    // Re-bind the send button
+    // Bind buttons
+    document.getElementById('show-results-btn').addEventListener('click', () => this.showResultsInline());
     document.getElementById('send-btn').addEventListener('click', () => this.sendResults());
     
     this.showSection('submit-form');
+  }
+
+  showResultsInline() {
+    const statusDiv = document.getElementById('submit-status');
+    const showBtn = document.getElementById('show-results-btn');
+    
+    showBtn.disabled = true;
+    showBtn.textContent = 'Showing Results...';
+    
+    // Show complete results on page
+    statusDiv.innerHTML = `
+      <div class="success" style="margin-top: 2rem;">
+        <h3>🎉 Your Complete Results</h3>
+        <p>Here's your personalized AI companion and tool recommendations!</p>
+      </div>
+    `;
+    
+    this.showCompleteResults(this.personalityResults, this.toolResults);
+    
+    // Update button
+    showBtn.textContent = '✓ Results Shown';
+    showBtn.style.backgroundColor = '#48bb78';
+    
+    // Scroll to results
+    statusDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
   async sendResults() {
@@ -532,7 +562,7 @@ const stopBtn = document.getElementById('stop-submit');
     this.email = emailInput.value.trim();
     
     if (!this.email) {
-      this.showError('Please enter your email address.');
+      this.showError('Please enter your email address to send results.');
       return;
     }
     
@@ -596,16 +626,22 @@ const stopBtn = document.getElementById('stop-submit');
   showCompleteResults(personalityResults, toolResults) {
     const resultsHTML = `
       <div class="complete-results">
-        <h2>🎯 Your AI Match Dashboard</h2>
+        <h2 style="text-align: center; margin-bottom: 1.5rem;">🎯 Your AI Match Dashboard</h2>
+        
+        <div style="text-align: center; margin-bottom: 2rem;">
+          <button onclick="window.print()" class="secondary" style="display: inline-flex; align-items: center; gap: 0.5rem;">
+            🖨️ Print Results
+          </button>
+        </div>
         
         <div class="results-section">
-          <h3>Top 3 AI Companions</h3>
+          <h3>🤖 Top 3 AI Companions</h3>
           ${personalityResults.top3.map((companion, index) => `
             <div class="result-item">
               <h4>${index + 1}. ${companion.name} – ${companion.percentage}% Match</h4>
               <p class="traits"><strong>Traits:</strong> ${companion.traits.join(', ')}</p>
               <p class="description">${companion.description}</p>
-              <p class="suggested-uses"><strong>Suggested uses:</strong> ${companion.suggestedUses.join(', ')}</p>
+              <p class="suggested-uses"><strong>Best for:</strong> ${companion.suggestedUses.join(', ')}</p>
             </div>
           `).join('')}
           
@@ -632,6 +668,11 @@ const stopBtn = document.getElementById('stop-submit');
             </div>
           </div>
         ` : ''}
+        
+        <div style="text-align: center; margin-top: 2rem; padding: 1.5rem; background: #f7fafc; border-radius: 12px;">
+          <p style="color: #4a5568; margin-bottom: 0.5rem;">💡 <strong>Pro Tip:</strong></p>
+          <p style="color: #718096; font-size: 0.95rem;">Save these results by taking a screenshot or using the print button above!</p>
+        </div>
       </div>
     `;
     
