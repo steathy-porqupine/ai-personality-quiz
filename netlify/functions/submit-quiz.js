@@ -2,7 +2,7 @@ const { Pool } = require('pg');
 const { Resend } = require('resend');
 const sgMail = require('@sendgrid/mail');
 
-// Initialize PostgreSQL connection
+// Initialize PostgreSQL connection with updated DATABASE_URL
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: { rejectUnauthorized: false }
