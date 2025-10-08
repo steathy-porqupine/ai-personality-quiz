@@ -501,6 +501,9 @@ const stopBtn = document.getElementById('stop-submit');
       const data = await response.json();
       
       if (data.success) {
+        submitBtn.textContent = 'Sent! ✓';
+        submitBtn.style.backgroundColor = '#4CAF50';
+        
         statusDiv.innerHTML = `
           <div class="success">
             <h3>✅ Results sent successfully!</h3>
